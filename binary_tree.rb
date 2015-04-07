@@ -2,13 +2,15 @@ class Node
   @value
   @left
   @right
+  @parent
 
-  attr_accessor :value, :left, :right
+  attr_accessor :value, :left, :right, :parent
 
-  def initialize(value = nil, left = nil, right = nil)
+  def initialize(value = nil, left = nil, right = nil, parent = nil)
     @value = value
     @left = left
     @right = right
+    @parent = parent
   end
 
   def is_leaf?
@@ -26,27 +28,36 @@ class Tree
   end
 
   def build_tree(array)
-    self.overall_root = build_tree_helper(array)
+    self.overall_root = Node.new(array.shift)
+    
+    array.each do |value|
+      build_tree_helper(Node.new(value), self.overall_root)
+    end
   end
 
   def display(root = self.overall_root)
-    puts root.value
-    # Recursive case: keep going while not leaf node.
-    if !root.is_leaf?
+    # Recursive case: keep going in order while not leaf node.
+    if !root.nil? && !root.is_leaf?
+      display(root.left)
+      puts root.value
       display(root.right)
     end
   end
 
   private
 
-  def build_tree_helper(array)
-    value = array[0]
-    root = Node.new(value)
-    # Recursive case where array is not empty.
-    if !array.empty?
-      root.right = build_tree_helper(array[1..-1])
+  def build_tree_helper(root, parent)
+    return root if parent.nil?
+
+    root.parent = parent
+
+    if root.value < parent.value
+      parent.left = build_tree_helper(root, parent.left)
+    else
+      parent.right = build_tree_helper(root, parent.right)
     end
-    root
+
+    parent
   end
 end
 
