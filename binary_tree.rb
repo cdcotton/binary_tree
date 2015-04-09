@@ -84,6 +84,10 @@ class Tree
     end
   end
 
+  def dfs_rec(target)
+    dfs_helper(self.overall_root, target)
+  end
+
   private
 
   def build_tree_helper(root, parent)
@@ -99,10 +103,22 @@ class Tree
 
     parent
   end
+
+  def dfs_helper(root, target)
+    if !root.left.nil?
+      dfs_helper(root.left, target)
+    end
+
+    return root if root.value == target
+
+    if !root.right.nil?
+      dfs_helper(root.right, target)
+    end
+  end
 end
 
 tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 tree.display
-target = tree.depth_first_search(6345)
+target = tree.dfs_rec(6345)
 puts target.value if !target.nil?
 puts 'nil' if target.nil?
