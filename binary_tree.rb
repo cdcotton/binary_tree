@@ -54,6 +54,7 @@ class Tree
       if !root.left.nil?
         q << root.left
       end
+
       if !root.right.nil?
         q << root.right
       end
@@ -62,6 +63,25 @@ class Tree
     end
 
     nil
+  end
+
+  def depth_first_search(target)
+    root = self.overall_root
+    s = [root]
+
+    while !s.empty?
+      return root if root.value == target
+
+      if !root.left.nil?
+        s.push(root.left)
+      end
+
+      if !root.right.nil?
+        s.push(root.right)
+      end
+
+      root = s.pop
+    end
   end
 
   private
@@ -83,6 +103,6 @@ end
 
 tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 tree.display
-target = tree.breadth_first_search(2)
+target = tree.depth_first_search(6345)
 puts target.value if !target.nil?
 puts 'nil' if target.nil?
